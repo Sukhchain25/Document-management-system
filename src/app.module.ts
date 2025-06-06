@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
+    AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, AuthModule, UsersModule],
