@@ -25,7 +25,6 @@ export class AuthController {
     try {
       return await this.authService.register(dto);
     } catch (err) {
-      console.error('Registration error:', err);
       throw new HttpException(
         err.message || 'Registration failed',
         err.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -39,7 +38,6 @@ export class AuthController {
     try {
       return await this.authService.login(dto);
     } catch (err) {
-      console.error('Login error:', err);
       throw new HttpException(
         err.message || 'Login failed',
         err.status || HttpStatus.INTERNAL_SERVER_ERROR,

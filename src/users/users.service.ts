@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRole } from './enums/roles.enums';
-import { PaginationParamsDto } from 'src/shared/dto/pagination-param.dto';
+import { PaginationParamsDto } from '../shared/dto/pagination-param.dto';
 
 @Injectable()
 export class UsersService {
