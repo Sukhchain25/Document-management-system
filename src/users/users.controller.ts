@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import { createResponse } from 'src/common/response.utils';
 
 @Controller('users')
 export class UsersController {
@@ -16,12 +17,8 @@ export class UsersController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.usersService.create(createUserDto);
-      return {
-        message: 'User created successfully',
-        data: user,
-      };
+      return createResponse(true, 'User created successfully');
     } catch (error) {
-      // Optional: logging here
       if (error instanceof HttpException) {
         throw error;
       }

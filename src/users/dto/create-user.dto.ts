@@ -17,6 +17,18 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  firstName: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  lastName: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  phone?: string;
+
   @ApiProperty({
     required: false,
     enum: ['admin', 'editor', 'viewer'],

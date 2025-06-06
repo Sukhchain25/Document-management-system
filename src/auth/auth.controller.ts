@@ -4,11 +4,15 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Request } from 'express';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -21,24 +25,32 @@ export class AuthController {
     try {
       return await this.authService.register(dto);
     } catch (err) {
-      throw err instanceof HttpException
-        ? err
-        : new HttpException(
-            'Registration failed',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
+      console.error('Registration error:', err);
+      throw new HttpException(
+        err.message || 'Registration failed',
+        err.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login user and return JWT' })
+  @ApiOperation({ summary: 'Login user and return tokens' })
   async login(@Body() dto: LoginDto) {
     try {
       return await this.authService.login(dto);
     } catch (err) {
-      throw err instanceof HttpException
-        ? err
-        : new HttpException('Login failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error('Login error:', err);
+      throw new HttpException(
+        err.message || 'Login failed',
+        err.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+  }
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Logout user and invalidate refresh token' })
+  async logout(@Req() req: Request) {
+    const user = req.user as any;
+    return await this.authService.logout(user.sub);
   }
 }

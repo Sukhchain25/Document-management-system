@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { RefreshToken } from 'src/auth/entities/referesh-token.entity';
 
 @Entity('users')
 export class User {
@@ -21,6 +23,15 @@ export class User {
   @Column()
   password: string;
 
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
+  @Column({ nullable: true })
+  phone?: string;
+
   @ApiProperty({ enum: ['admin', 'editor', 'viewer'], default: 'viewer' })
   @Column({ default: 'viewer' })
   role: 'admin' | 'editor' | 'viewer';
@@ -34,4 +45,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => RefreshToken, (token) => token.user)
+  refreshTokens: RefreshToken[];
 }

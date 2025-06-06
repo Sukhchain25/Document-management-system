@@ -17,7 +17,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existing = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
+      where: [{ email: createUserDto.email }, { phone: createUserDto.phone }],
     });
     if (existing) {
       throw new ConflictException('User already exists');
@@ -33,5 +33,9 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  async findById(id: string) {
+    return this.userRepository.findOne({ where: { id } });
   }
 }
