@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { createResponse } from 'src/common/response.utils';
+import { createResponse } from 'src/shared/response.utils';
 
 @Controller('users')
 export class UsersController {

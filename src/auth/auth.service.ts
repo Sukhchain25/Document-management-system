@@ -10,7 +10,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { createResponse } from 'src/common/response.utils';
+import { createResponse } from 'src/shared/response.utils';
 import { RefreshToken } from './entities/referesh-token.entity';
 
 @Injectable()
