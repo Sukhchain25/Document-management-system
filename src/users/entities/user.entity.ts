@@ -7,8 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { RefreshToken } from 'src/auth/entities/referesh-token.entity';
-
+import { RefreshToken } from '../../auth/entities/referesh-token.entity';
 @Entity('users')
 export class User {
   @ApiProperty()
