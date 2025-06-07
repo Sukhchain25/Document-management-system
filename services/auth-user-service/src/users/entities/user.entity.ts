@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { RefreshToken } from '../../auth/entities/referesh-token.entity';
+import { DocumentEntity } from '../../document/entities/document.entity';
+
 @Entity('users')
 export class User {
   @ApiProperty()
@@ -47,4 +49,7 @@ export class User {
 
   @OneToMany(() => RefreshToken, (token) => token.user)
   refreshTokens: RefreshToken[];
+
+  @OneToMany(() => DocumentEntity, (document) => document.user)
+  documents: DocumentEntity[];
 }

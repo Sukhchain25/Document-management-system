@@ -5,6 +5,8 @@ import { createResponse } from '../shared/response.utils';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { UserRole } from './enums/roles.enums';
 
+// Add Jest types for TypeScript
+
 const mockUser = {
   id: '1',
   email: 'test@example.com',

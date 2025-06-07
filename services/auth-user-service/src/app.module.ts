@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
+import { DocumentsModule } from './document/document.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
+    RabbitMQModule,
+    DocumentsModule,
   ],
   controllers: [],
   providers: [],
