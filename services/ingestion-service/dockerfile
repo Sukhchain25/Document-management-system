@@ -1,0 +1,23 @@
+# Use latest Node.js LTS with global crypto support
+FROM node:20
+
+# Update system packages
+RUN apt-get update && apt-get upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json ./
+RUN npm install --production
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the TypeScript code
+RUN npm run build
+
+# Expose the service port
+EXPOSE 3001
+
+# Start the microservice
+CMD ["node", "dist/main.js"]
