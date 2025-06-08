@@ -4,31 +4,48 @@ import { Ingestion } from './ingestion/entities/ingestion.entity';
 import { IngestionService } from './ingestion/ingestion.service';
 import { IngestionController } from './ingestion/ingestion.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IngestionModule } from './ingestion/ingestion.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url:
-        process.env.DATABASE_URL ||
-        'postgres://sukhchain:postgres@localhost:5432/ingestion',
-      entities: [Ingestion],
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url: configService.get<string>('DATABASE_URL'),
+        entities: [Ingestion],
+        // optionally other TypeORM config here like synchronize, logging, etc.
+      }),
+    }),
+
     TypeOrmModule.forFeature([Ingestion]),
-    ClientsModule.register([
+
+    ClientsModule.registerAsync([
       {
         name: 'USER_AUTH_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: [process.env.RABBITMQ_URL || 'amqp://127.0.0.1:5672'],
-          queue: 'document_upload_queue',
-          queueOptions: {
-            durable: false,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')].filter(
+              (url): url is string => typeof url === 'string',
+            ),
+            queue: 'document_upload_queue',
+            queueOptions: {
+              durable: false,
+            },
           },
-        },
+        }),
       },
     ]),
+
     IngestionModule,
   ],
   controllers: [IngestionController],
